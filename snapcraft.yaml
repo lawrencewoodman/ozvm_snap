@@ -1,0 +1,44 @@
+name: ozvm
+version: "1.3.0b1"
+summary: A Cambridge Z88 Emulator
+description: A Cambridge Z88 Emulator
+grade: devel
+confinement: strict
+
+apps:
+  ozvm:
+    command: bin/launcher.sh
+    plugs: [x11]
+
+parts:
+    ozvm:
+        source: http://gitlab.com/z88/ozvm/repository/V1.3.0b1/archive.zip
+        plugin: dump
+        build-packages: [default-jdk]
+        stage-packages: [default-jre]
+        build: |
+            cd ozvm-V*
+            chmod +x ./makejar.sh
+            ./makejar.sh
+        install: |
+            cd ozvm-V*
+            mv z88.jar $SNAPCRAFT_PART_INSTALL
+            mv roms $SNAPCRAFT_PART_INSTALL
+        organize:
+            z88.jar: usr/ozvm/z88.jar
+            roms/ : usr/ozvm/roms/
+        stage:
+            - usr/ozvm/z88.jar
+            - usr/ozvm/roms/
+        prime:
+            - usr/ozvm/z88.jar
+            - usr/ozvm/roms/
+
+    launcher:
+        source: .
+        plugin: dump
+        stage-packages: [default-jre, x11-utils]
+        organize:
+            launcher.sh: bin/launcher.sh
+        install: |
+            chmod a+x $SNAPCRAFT_PART_INSTALL/launcher.sh
