@@ -6,9 +6,15 @@ grade: devel
 confinement: devmode
 
 apps:
-  ozvm:
-    command: bin/launcher.sh
-    plugs: [x11]
+    ozvm:
+        command: java -jar -Duser.home=$SNAP_USER_DATA $SNAP/usr/ozvm/z88.jar
+        plugs: [x11]
+        environment:
+            JAVA_HOME: $SNAP/usr/lib/jvm/java-8-openjdk-$SNAP_ARCH
+            PATH: $JAVA_HOME/jre/bin:$SNAP/usr/bin/:$PATH
+            XDG_DATA_HOME: $SNAP/usr/share
+            FONTCONFIG_PATH: $SNAP/etc/fonts/config.d
+            FONTCONFIG_FILE: $SNAP/etc/fonts/fonts.conf
 
 parts:
     ozvm:
@@ -37,8 +43,7 @@ parts:
     launcher:
         source: .
         plugin: dump
-        stage-packages: [default-jre, ssh-askpass]
-        organize:
-            launcher.sh: bin/launcher.sh
-        install: |
-            chmod a+x $SNAPCRAFT_PART_INSTALL/launcher.sh
+        # Need to stage default-jre here.
+        # Why doesn't it accept its being staged in ozvm part?
+        stage-packages: [default-jre]
+
