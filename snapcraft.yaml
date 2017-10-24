@@ -15,7 +15,7 @@ parts:
         source: http://gitlab.com/z88/ozvm/repository/V1.3.0b1/archive.zip
         plugin: dump
         build-packages: [default-jdk]
-        stage-packages: [default-jre, x11-utils]
+        stage-packages: [default-jre]
         build: |
             cd ozvm-V*
             chmod +x ./makejar.sh
@@ -30,11 +30,9 @@ parts:
         stage:
             - usr/ozvm/z88.jar
             - usr/ozvm/roms/
-            - usr/bin/xprop
         prime:
             - usr/ozvm/z88.jar
             - usr/ozvm/roms/
-            - usr/bin/xprop
 
     launcher:
         source: .
